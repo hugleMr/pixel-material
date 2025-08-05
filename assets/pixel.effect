@@ -2,8 +2,9 @@ CCEffect %{
   techniques:
     - passes:
         - vert: vs
-          frag: fs
+          frag: fs:frag
           properties:
+            //mainTexture: { value: white }
             dataMap: { value: white }
 }%
 
@@ -11,6 +12,7 @@ CCProgram vs %{
   precision highp float;
   #include <builtin/uniforms/cc-global>
   #include <builtin/uniforms/cc-local>
+  #include <legacy/output>
 
   in vec3 a_position;
   in vec2 a_texCoord;
@@ -26,19 +28,21 @@ CCProgram fs %{
   precision highp float;
   #include <builtin/uniforms/cc-global>
   #include <builtin/uniforms/cc-local>
+  #include <legacy/output>
 
   in vec2 v_uv;
-  layout(location = 0) out vec4 fragColor;
 
+  //uniform sampler2D mainTexture;
   uniform sampler2D dataMap;
 
-  void main () {
-    vec4 baseColor = vec4(1.0, 1.0, 1.0, 1.0);
+  vec4 frag () {
+    vec4 baseColor = vec4(1.0, 1.0, 1.0, 1.0);//texture(mainTexture, v_uv);
     vec2 resolution = vec2(32, 32);
     vec2 temp = resolution * 1.0;
     vec2 pixelUV = floor(v_uv * temp) / temp + vec2(0.5) / temp;
     vec4 colorFromData = texture(dataMap, pixelUV);
 
-    fragColor = baseColor * colorFromData;
+    vec4 fragColor = baseColor * colorFromData;
+    return CCFragOutput(fragColor);
   }
 }%

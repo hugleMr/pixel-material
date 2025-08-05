@@ -1,5 +1,5 @@
 {
-  "__version__": "1.0.9",
+  "__version__": "1.0.12",
   "modules": {
     "configs": {
       "defaultConfig": {
@@ -336,8 +336,8 @@
       "procedural-animation": {
         "_value": false
       },
-      "custom-pipeline": {
-        "_value": false
+      "render-pipeline": {
+        "_option": "legacy-pipeline"
       }
     },
     "flags": {},
@@ -368,7 +368,8 @@
       "ui",
       "video",
       "websocket",
-      "webview"
+      "webview",
+      "legacy-pipeline"
     ],
     "noDeprecatedFeatures": {
       "value": false,

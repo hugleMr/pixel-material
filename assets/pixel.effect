@@ -1,0 +1,44 @@
+CCEffect %{
+  techniques:
+    - passes:
+        - vert: vs
+          frag: fs
+          properties:
+            dataMap: { value: white }
+}%
+
+CCProgram vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  out vec2 v_uv;
+
+  void main () {
+    gl_Position = cc_matProj * cc_matView * cc_matWorld * vec4(a_position, 1.0);
+    v_uv = a_texCoord;
+  }
+}%
+
+CCProgram fs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #include <builtin/uniforms/cc-local>
+
+  in vec2 v_uv;
+  layout(location = 0) out vec4 fragColor;
+
+  uniform sampler2D dataMap;
+
+  void main () {
+    vec4 baseColor = vec4(1.0, 1.0, 1.0, 1.0);
+    vec2 resolution = vec2(32, 32);
+    vec2 temp = resolution * 1.0;
+    vec2 pixelUV = floor(v_uv * temp) / temp + vec2(0.5) / temp;
+    vec4 colorFromData = texture(dataMap, pixelUV);
+
+    fragColor = baseColor * colorFromData;
+  }
+}%
